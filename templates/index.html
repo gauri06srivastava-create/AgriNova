@@ -64,7 +64,11 @@
             </button>
 
         </form>
-
+{% if error %}
+<div class="result" style="background:#ffe5e5; color:#b42318;">
+    <p>{{ error }}</p>
+</div>
+{% endif %}
         {% if prediction %}
         <div class="result">
             <h2>Recommended Crop 🌱</h2>
