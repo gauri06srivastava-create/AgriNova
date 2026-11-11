@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AgriNova - Weather</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <h1>AgriNova Weather Information 🌦️</h1>
+
+    <p>Check current weather conditions in your city.</p>
+
+    <form method="POST">
+
+        <label>Enter City Name</label>
+
+        <input
+            type="text"
+            name="city"
+            placeholder="e.g. Kanpur"
+            required
+        >
+
+        <button type="submit">
+            Get Weather
+        </button>
+
+    </form>
+
+    {% if error %}
+        <div class="result">
+            <p style="color:red;">{{ error }}</p>
+        </div>
+    {% endif %}
+
+    {% if weather %}
+
+        <div class="result">
+
+            <h2>Weather Report: {{ weather.city }}</h2>
+
+            <h3>{{ weather.temperature }} °C</h3>
+
+            <p>
+                Condition: {{ weather.condition }}
+            </p>
+
+            <p>
+                Humidity: {{ weather.humidity }}%
+            </p>
+
+            <p>
+                Wind Speed: {{ weather.wind_speed }} m/s
+            </p>
+
+            <p>
+                Rainfall (last hour): {{ weather.rainfall }} mm
+            </p>
+
+        </div>
+
+    {% endif %}
+
+{% if forecast %}
+
+    <h2>5-Day Weather Forecast</h2>
+
+    {% for day in forecast %}
+
+        <div class="result">
+
+            <h3>{{ day.date }}</h3>
+
+            <p>Temperature: {{ day.temperature }} °C</p>
+
+            <p>Humidity: {{ day.humidity }}%</p>
+
+            <p>Condition: {{ day.condition }}</p>
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
+</body>
+</html>

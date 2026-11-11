@@ -1,2 +1,15 @@
+# Environment variables
 .env
+
+# Python cache
 __pycache__/
+*.pyc
+
+# Virtual environments
+disease_env/
+venv/
+
+# Large plant disease dataset
+data/plant_disease/raw/
+
+# Model checkpoints

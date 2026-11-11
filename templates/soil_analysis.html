@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AgriNova - Soil Analysis</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <h1>Soil Analysis 🌱</h1>
+    <p>Enter your soil parameters below.</p>
+
+    <form method="POST">
+
+        <label>Nitrogen (N)</label>
+        <input type="number" step="any" name="N" min="0" required>
+
+        <label>Phosphorus (P)</label>
+        <input type="number" step="any" name="P" min="0" required>
+
+        <label>Potassium (K)</label>
+        <input type="number" step="any" name="K" min="0" required>
+
+        <label>Soil pH</label>
+        <input type="number" step="any" name="ph"
+               min="0" max="14" required>
+
+        <button type="submit">Analyze Soil</button>
+
+    </form>
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    {% if result %}
+        <h2>Soil Analysis Report</h2>
+
+        <p>Nitrogen: {{ result.nitrogen }}</p>
+        <p>Phosphorus: {{ result.phosphorus }}</p>
+        <p>Potassium: {{ result.potassium }}</p>
+        <p>Soil pH: {{ result.ph }}</p>
+
+        <h3>Soil Condition: {{ result.condition }}</h3>
+
+        <p>{{ result.suggestion }}</p>
+        <p>{{ result.npk_note }}</p>
+    {% endif %}
+
+</body>
+</html>

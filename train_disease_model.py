@@ -21,7 +21,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Train for 3 epochs initially
-epochs = 3
+epochs = 7
 
 for epoch in range(epochs):
 
@@ -95,3 +95,14 @@ with open("models/disease_classes.json", "w") as file:
 
 print("\nModel training completed!")
 print("Model and class names saved successfully!")
+model = PlantDiseaseCNN(num_classes).to(device)
+
+# Load previously trained weights
+model.load_state_dict(
+    torch.load(
+        "models/plant_disease_model.pth",
+        map_location=device
+    )
+)
+
+print("Previous model weights loaded!")
