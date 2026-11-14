@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}AgriNova{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <a href="/knowledge-hub">Knowledge Hub</a>
+</head>
+
+<body class="app-shell">
+
+    <aside class="sidebar">
+
+        <a href="{{ url_for('home') }}" class="brand sidebar-brand">
+            <span class="brand-icon">✳</span>
+            <span>Agri<span class="accent">Nova</span></span>
+        </a>
+
+        <div class="sidebar-caption">WORKSPACE</div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('home') }}"
+               class="{% if request.endpoint == 'home' %}active{% endif %}">
+                <span class="side-icon">⌂</span>
+                <span>Crop Intelligence</span>
+                <span class="nav-arrow">›</span>
+            </a>
+
+            <a href="{{ url_for('soil_analysis') }}"
+               class="{% if request.endpoint == 'soil_analysis' %}active{% endif %}">
+                <span class="side-icon">◈</span>
+                <span>Soil Analysis</span>
+                <span class="nav-arrow">›</span>
+            </a>
+
+            <a href="{{ url_for('weather_page') }}"
+               class="{% if request.endpoint == 'weather_page' %}active{% endif %}">
+                <span class="side-icon">☼</span>
+                <span>Weather Insights</span>
+                <span class="nav-arrow">›</span>
+            </a>
+
+            <a href="{{ url_for('plant_disease') }}"
+               class="{% if request.endpoint == 'plant_disease' %}active{% endif %}">
+                <span class="side-icon">❋</span>
+                <span>Plant Doctor</span>
+                <span class="nav-arrow">›</span>
+            </a>
+            <a href="{{ url_for('knowledge_hub') }}"
+   class="{% if request.endpoint == 'knowledge_hub' %}active{% endif %}">
+    <span class="side-icon">📚</span>
+    <span>Farming Knowledge Hub</span>
+    <span class="nav-arrow">›</span>
+</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-status">
+                <span class="status-dot"></span>
+                <div>
+                    <strong>System Online</strong>
+                    <small>All modules operational</small>
+                </div>
+            </div>
+
+            <div class="sidebar-note">
+                <span>✳</span>
+                <p>Growing smarter.<br>Farming better.</p>
+            </div>
+        </div>
+
+    </aside>
+
+    <div class="main-area">
+
+        <header class="topbar">
+            <div>
+                <span class="topbar-label">SMART AGRICULTURE PLATFORM</span>
+                <p class="topbar-title">Welcome to your farm workspace</p>
+            </div>
+
+            <div class="topbar-right">
+                <span class="live-indicator"></span>
+                <span>LIVE SYSTEM</span>
+            </div>
+        </header>
+
+        <main class="page-container">
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="footer">
+            <div class="footer-brand">
+                Agri<span class="accent">Nova</span>
+            </div>
+            <p>Intelligence for a greener tomorrow.</p>
+            <span>© 2026 AgriNova</span>
+        </footer>
+
+    </div>
+
+</body>
+</html>

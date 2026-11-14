@@ -1,16 +1,23 @@
-
+import os
+from werkzeug.utils import secure_filename
+from src.disease_prediction import predict_disease
 from flask import Flask, render_template, request
 import pickle
 import pandas as pd
 import requests
 from src.soil_analysis import analyze_soil
 from src.weather import get_weather, get_forecast
+from src.knowledge_hub import get_all_crops, get_crop_details
 
 
 # Create Flask application
 app = Flask(__name__)
 
+app.config["UPLOAD_FOLDER"] = "static/uploads"
 
+os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 # Load trained crop recommendation model
 with open("models/crop_model.pkl", "rb") as file:
     model = pickle.load(file)
@@ -141,6 +148,120 @@ def weather_page():
     )
 
 
+# MODULE 4: PLANT DISEASE DETECTION
+
+def allowed_file(filename):
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    )
+
+@app.route("/knowledge-hub", methods=["GET", "POST"])
+def knowledge_hub():
+    crops = get_all_crops()
+    selected_crop = None
+    details = None
+
+    if request.method == "POST":
+        selected_crop = request.form.get("crop")
+        details = get_crop_details(selected_crop)
+
+    return render_template(
+        "knowledge_hub.html",
+        crops=crops,
+        selected_crop=selected_crop,
+        details=details
+    )
+
+@app.route("/plant-disease", methods=["GET", "POST"])
+def plant_disease():
+
+    prediction = None
+    confidence = None
+    error = None
+    image_path = None
+    symptoms = None
+    care = None
+
+    if request.method == "POST":
+
+        if "leaf_image" not in request.files:
+            error = "Please upload a leaf image."
+
+        else:
+            file = request.files["leaf_image"]
+
+            if file.filename == "":
+                error = "No image selected."
+
+            elif not allowed_file(file.filename):
+                error = "Only JPG, JPEG and PNG images are allowed."
+
+            else:
+                try:
+                    filename = secure_filename(file.filename)
+
+                    save_path = os.path.join(
+                        app.config["UPLOAD_FOLDER"],
+                        filename
+                    )
+
+                    file.save(save_path)
+
+                    prediction, confidence = predict_disease(save_path)
+
+                    image_path = "/" + save_path.replace("\\", "/")
+
+                    if confidence < 60:
+                        error = (
+                            "Low confidence prediction. "
+                            "Please upload a clearer leaf image "
+                            "and do not rely on this result alone."
+                        )
+
+                    disease_info = {
+                        "Grape___Black_rot": {
+                            "symptoms": "Dark brown or black spots on leaves and berries.",
+                            "care": "Remove infected plant parts, maintain airflow "
+                                    "and avoid overhead watering."
+                        }
+                    }
+
+                    info = disease_info.get(prediction)
+
+                    if info:
+                        symptoms = info["symptoms"]
+                        care = info["care"]
+
+                except Exception as e:
+                    error = "Prediction failed: " + str(e)
+
+    return render_template(
+        "plant_disease.html",
+        prediction=prediction,
+        confidence=confidence,
+        image_path=image_path,
+        symptoms=symptoms,
+        care=care,
+        error=error
+    )
+
 # Run Flask application
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=False)
+@app.route("/knowledge-hub", methods=["GET", "POST"])
+def knowledge_hub():
+    crops = get_all_crops()
+    selected_crop = None
+    details = None
+
+    if request.method == "POST":
+        selected_crop = request.form.get("crop")
+        details = get_crop_details(selected_crop)
+
+    return render_template(
+        "knowledge_hub.html",
+        crops=crops,
+        selected_crop=selected_crop,
+        details=details
+    )
