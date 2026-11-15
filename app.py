@@ -1,29 +1,40 @@
+
 import os
-from werkzeug.utils import secure_filename
-from src.disease_prediction import predict_disease
-from flask import Flask, render_template, request
 import pickle
 import pandas as pd
 import requests
+
+from flask import Flask, render_template, request
+from werkzeug.utils import secure_filename
+
 from src.soil_analysis import analyze_soil
 from src.weather import get_weather, get_forecast
 from src.knowledge_hub import get_all_crops, get_crop_details
+from src.disease_prediction import predict_disease
+from src.disease_info import get_disease_details, get_display_name
 
 
-# Create Flask application
+# CREATE FLASK APPLICATION
 app = Flask(__name__)
 
-app.config["UPLOAD_FOLDER"] = "static/uploads"
+app.config["UPLOAD_FOLDER"] = os.path.join(
+    app.root_path, "static", "uploads"
+)
 
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
-# Load trained crop recommendation model
-with open("models/crop_model.pkl", "rb") as file:
+
+
+# LOAD CROP RECOMMENDATION MODEL
+with open(
+    os.path.join(app.root_path, "models", "crop_model.pkl"), "rb"
+) as file:
     model = pickle.load(file)
 
 
 # MODULE 1: CROP RECOMMENDATION
+
 @app.route("/", methods=["GET", "POST"])
 def home():
 
@@ -79,6 +90,7 @@ def home():
 
 
 # MODULE 2: SOIL ANALYSIS
+
 @app.route("/soil-analysis", methods=["GET", "POST"])
 def soil_analysis():
 
@@ -109,6 +121,7 @@ def soil_analysis():
 
 
 # MODULE 3: WEATHER INFORMATION
+
 @app.route("/weather", methods=["GET", "POST"])
 def weather_page():
 
@@ -125,10 +138,7 @@ def weather_page():
 
         else:
             try:
-                # Get current weather
                 weather = get_weather(city)
-
-                # Get 5-day forecast
                 forecast = get_forecast(city)
 
             except requests.exceptions.RequestException:
@@ -151,27 +161,12 @@ def weather_page():
 # MODULE 4: PLANT DISEASE DETECTION
 
 def allowed_file(filename):
+
     return (
         "." in filename
         and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
     )
 
-@app.route("/knowledge-hub", methods=["GET", "POST"])
-def knowledge_hub():
-    crops = get_all_crops()
-    selected_crop = None
-    details = None
-
-    if request.method == "POST":
-        selected_crop = request.form.get("crop")
-        details = get_crop_details(selected_crop)
-
-    return render_template(
-        "knowledge_hub.html",
-        crops=crops,
-        selected_crop=selected_crop,
-        details=details
-    )
 
 @app.route("/plant-disease", methods=["GET", "POST"])
 def plant_disease():
@@ -182,6 +177,7 @@ def plant_disease():
     image_path = None
     symptoms = None
     care = None
+    prevention = None
 
     if request.method == "POST":
 
@@ -208,30 +204,58 @@ def plant_disease():
 
                     file.save(save_path)
 
-                    prediction, confidence = predict_disease(save_path)
+                    image_path = "/static/uploads/" + filename
 
-                    image_path = "/" + save_path.replace("\\", "/")
+                    # PREDICT DISEASE
+                    raw_prediction, confidence = predict_disease(save_path)
+
+                    # GET DISEASE INFORMATION
+                    info = get_disease_details(raw_prediction)
+
+                    prediction = get_display_name(raw_prediction)
+
+                    if info is not None:
+
+                        symptoms = info["symptoms"]
+                        care = info["care"]
+                        prevention = info["prevention"]
+
+                    elif raw_prediction.endswith("___healthy"):
+
+                        symptoms = "No visible disease detected by the model."
+
+                        care = (
+                            "Continue regular watering, provide suitable "
+                            "sunlight and monitor plant growth."
+                        )
+
+                        prevention = (
+                            "Maintain proper spacing, healthy soil "
+                            "and regular plant inspection."
+                        )
+
+                    else:
+
+                        symptoms = (
+                            "Detailed symptoms information is not available yet."
+                        )
+
+                        care = (
+                            "Consult a local agricultural expert for "
+                            "disease-specific guidance."
+                        )
+
+                        prevention = (
+                            "Use healthy planting material and monitor "
+                            "the plant regularly."
+                        )
 
                     if confidence < 60:
                         error = (
-                            "Low confidence prediction. "
-                            "Please upload a clearer leaf image "
-                            "and do not rely on this result alone."
+                            "Low confidence prediction. Please upload "
+                            "a clearer leaf image and do not rely on "
+                            "this result alone."
                         )
-
-                    disease_info = {
-                        "Grape___Black_rot": {
-                            "symptoms": "Dark brown or black spots on leaves and berries.",
-                            "care": "Remove infected plant parts, maintain airflow "
-                                    "and avoid overhead watering."
-                        }
-                    }
-
-                    info = disease_info.get(prediction)
-
-                    if info:
-                        symptoms = info["symptoms"]
-                        care = info["care"]
 
                 except Exception as e:
                     error = "Prediction failed: " + str(e)
@@ -243,19 +267,22 @@ def plant_disease():
         image_path=image_path,
         symptoms=symptoms,
         care=care,
+        prevention=prevention,
         error=error
     )
 
-# Run Flask application
-if __name__ == "__main__":
-    app.run(debug=True, use_reloader=False)
+
+# MODULE 5: FARMING KNOWLEDGE HUB
+
 @app.route("/knowledge-hub", methods=["GET", "POST"])
 def knowledge_hub():
+
     crops = get_all_crops()
     selected_crop = None
     details = None
 
     if request.method == "POST":
+
         selected_crop = request.form.get("crop")
         details = get_crop_details(selected_crop)
 
@@ -265,3 +292,9 @@ def knowledge_hub():
         selected_crop=selected_crop,
         details=details
     )
+
+
+# RUN FLASK APPLICATION
+
+if __name__ == "__main__":
+    app.run(debug=True, use_reloader=False)
