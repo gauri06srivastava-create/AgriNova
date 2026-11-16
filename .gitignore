@@ -13,3 +13,5 @@ venv/
 data/plant_disease/raw/
 
 # Model checkpoints
+
+/static/uploads/

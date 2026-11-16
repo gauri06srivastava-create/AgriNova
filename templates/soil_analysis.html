@@ -1,53 +1,76 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>AgriNova - Soil Analysis</title>
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
-</head>
+{% block title %}Soil Analysis | AgriNova{% endblock %}
 
-<body>
+{% block content %}
 
-    <h1>Soil Analysis 🌱</h1>
-    <p>Enter your soil parameters below.</p>
+<section class="page-hero">
+    <div class="eyebrow">MODULE 02 / SOIL INTELLIGENCE</div>
+    <h1>Understand your <span class="accent">soil.</span></h1>
+    <p>Evaluate soil composition and pH levels to make more informed soil-management decisions.</p>
+</section>
 
-    <form method="POST">
+<section class="workspace">
+    <form method="POST" action="{{ url_for('soil_analysis') }}" class="form-panel">
+        <div class="eyebrow">SOIL PARAMETERS</div>
+        <h2>Enter soil details.</h2>
+        <p class="muted">Provide your soil nutrient values and pH level.</p>
 
-        <label>Nitrogen (N)</label>
-        <input type="number" step="any" name="N" min="0" required>
+        <div class="input-grid">
+            <div class="field">
+                <label>Nitrogen (N)</label>
+                <input type="number" name="N" step="any" min="0" placeholder="Enter nitrogen" required>
+            </div>
 
-        <label>Phosphorus (P)</label>
-        <input type="number" step="any" name="P" min="0" required>
+            <div class="field">
+                <label>Phosphorus (P)</label>
+                <input type="number" name="P" step="any" min="0" placeholder="Enter phosphorus" required>
+            </div>
 
-        <label>Potassium (K)</label>
-        <input type="number" step="any" name="K" min="0" required>
+            <div class="field">
+                <label>Potassium (K)</label>
+                <input type="number" name="K" step="any" min="0" placeholder="Enter potassium" required>
+            </div>
 
-        <label>Soil pH</label>
-        <input type="number" step="any" name="ph"
-               min="0" max="14" required>
+            <div class="field">
+                <label>Soil pH</label>
+                <input type="number" name="ph" step="any" min="0" max="14" placeholder="0 – 14" required>
+            </div>
+        </div>
 
-        <button type="submit">Analyze Soil</button>
+        <button type="submit" class="primary-btn full-btn">Analyze Soil ↗</button>
 
+        {% if error %}
+            <div class="alert error-alert">{{ error }}</div>
+        {% endif %}
     </form>
 
-    {% if error %}
-        <p style="color:red;">{{ error }}</p>
-    {% endif %}
+    <div class="result-panel">
+        <div class="eyebrow">SOIL ANALYSIS REPORT</div>
+        <div class="result-symbol">◉</div>
 
-    {% if result %}
-        <h2>Soil Analysis Report</h2>
+        {% if result %}
+            <span class="result-label">SOIL CONDITION</span>
+            <h2>{{ result.condition }}</h2>
 
-        <p>Nitrogen: {{ result.nitrogen }}</p>
-        <p>Phosphorus: {{ result.phosphorus }}</p>
-        <p>Potassium: {{ result.potassium }}</p>
-        <p>Soil pH: {{ result.ph }}</p>
+            <div class="soil-values">
+                <div><span>Nitrogen</span><strong>{{ result.nitrogen }}</strong></div>
+                <div><span>Phosphorus</span><strong>{{ result.phosphorus }}</strong></div>
+                <div><span>Potassium</span><strong>{{ result.potassium }}</strong></div>
+                <div><span>pH Level</span><strong>{{ result.ph }}</strong></div>
+            </div>
 
-        <h3>Soil Condition: {{ result.condition }}</h3>
+            <div class="suggestion-box">
+                <span class="result-label">RECOMMENDATION</span>
+                <p>{{ result.suggestion }}</p>
+            </div>
 
-        <p>{{ result.suggestion }}</p>
-        <p>{{ result.npk_note }}</p>
-    {% endif %}
+            <p class="small-note">{{ result.npk_note }}</p>
+        {% else %}
+            <h2>Soil insights<br>start here.</h2>
+            <p>Submit your soil parameters to receive a soil condition report and management suggestion.</p>
+        {% endif %}
+    </div>
+</section>
 
-</body>
-</html>
+{% endblock %}

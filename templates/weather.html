@@ -1,91 +1,92 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>AgriNova - Weather</title>
+{% block title %}Weather Intelligence | AgriNova{% endblock %}
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
-</head>
+{% block content %}
 
-<body>
+<section class="page-hero">
+    <div class="eyebrow">MODULE 03 / WEATHER INTELLIGENCE</div>
+    <h1>Read the <span class="accent">weather.</span></h1>
+    <p>Understand local weather conditions and upcoming forecasts for better agricultural planning.</p>
+</section>
 
-    <h1>AgriNova Weather Information 🌦️</h1>
+<section class="form-panel weather-search">
+    <div>
+        <div class="eyebrow">LOCATION SEARCH</div>
+        <h2>Where is your farm?</h2>
+        <p class="muted">Enter a city to retrieve current weather and forecast information.</p>
+    </div>
 
-    <p>Check current weather conditions in your city.</p>
-
-    <form method="POST">
-
-        <label>Enter City Name</label>
-
-        <input
-            type="text"
-            name="city"
-            placeholder="e.g. Kanpur"
-            required
-        >
-
-        <button type="submit">
-            Get Weather
-        </button>
-
+    <form method="POST" action="{{ url_for('weather_page') }}" class="search-form">
+        <input type="text" name="city" placeholder="Enter city name..." required>
+        <button type="submit" class="primary-btn">Get Weather ↗</button>
     </form>
 
     {% if error %}
-        <div class="result">
-            <p style="color:red;">{{ error }}</p>
-        </div>
+        <div class="alert error-alert">{{ error }}</div>
     {% endif %}
+</section>
 
-    {% if weather %}
+{% if weather %}
 
-        <div class="result">
+<section class="weather-main">
+    <div class="weather-current">
+        <div class="eyebrow">CURRENT CONDITIONS</div>
+        <h2>{{ weather.city }}</h2>
+        <div class="temperature">{{ weather.temperature }}<span>°C</span></div>
+        <h3>{{ weather.condition }}</h3>
+        <p class="muted">Live weather information</p>
+    </div>
 
-            <h2>Weather Report: {{ weather.city }}</h2>
-
-            <h3>{{ weather.temperature }} °C</h3>
-
-            <p>
-                Condition: {{ weather.condition }}
-            </p>
-
-            <p>
-                Humidity: {{ weather.humidity }}%
-            </p>
-
-            <p>
-                Wind Speed: {{ weather.wind_speed }} m/s
-            </p>
-
-            <p>
-                Rainfall (last hour): {{ weather.rainfall }} mm
-            </p>
-
+    <div class="weather-metrics">
+        <div class="metric-card">
+            <span>HUMIDITY</span>
+            <h2>{{ weather.humidity }}<small>%</small></h2>
         </div>
 
-    {% endif %}
-
-{% if forecast %}
-
-    <h2>5-Day Weather Forecast</h2>
-
-    {% for day in forecast %}
-
-        <div class="result">
-
-            <h3>{{ day.date }}</h3>
-
-            <p>Temperature: {{ day.temperature }} °C</p>
-
-            <p>Humidity: {{ day.humidity }}%</p>
-
-            <p>Condition: {{ day.condition }}</p>
-
+        <div class="metric-card">
+            <span>WIND SPEED</span>
+            <h2>{{ weather.wind_speed }}<small> m/s</small></h2>
         </div>
 
-    {% endfor %}
+        <div class="metric-card">
+            <span>RAINFALL</span>
+            <h2>{{ weather.rainfall }}<small> mm</small></h2>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <div class="eyebrow">FORECAST / NEXT 5 DAYS</div>
+            <h2>Plan ahead.</h2>
+        </div>
+    </div>
+
+    <div class="forecast-grid">
+        {% for day in forecast %}
+        <div class="forecast-card">
+            <span class="forecast-date">{{ day.date }}</span>
+            <div class="forecast-icon">☀</div>
+            <h3>{{ day.temperature }}°C</h3>
+            <p>{{ day.condition }}</p>
+            <span class="muted">Humidity: {{ day.humidity }}%</span>
+        </div>
+        {% else %}
+        <p class="muted">Forecast information is currently unavailable.</p>
+        {% endfor %}
+    </div>
+</section>
+
+{% else %}
+
+<div class="empty-state">
+    <div class="result-symbol">☼</div>
+    <h2>Weather intelligence awaits.</h2>
+    <p>Search for a city to see current conditions and the upcoming forecast.</p>
+</div>
 
 {% endif %}
 
-</body>
-</html>
+{% endblock %}

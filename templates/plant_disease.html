@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Plant Doctor | AgriNova{% endblock %}
+
+{% block content %}
+
+<section class="page-hero">
+    <div class="eyebrow">MODULE 04 / PLANT HEALTH INTELLIGENCE</div>
+    <h1>Protect your <span class="accent">plants.</span></h1>
+    <p>Upload a leaf image to detect potential plant diseases using image-based machine learning.</p>
+</section>
+
+<section class="workspace">
+    <div class="form-panel">
+        <div class="eyebrow">PLANT DISEASE DETECTION</div>
+        <h2>Scan a leaf.</h2>
+        <p class="muted">Upload a clear JPG, JPEG or PNG image of a plant leaf.</p>
+
+        <form method="POST" action="{{ url_for('plant_disease') }}" enctype="multipart/form-data">
+            <label class="upload-area" for="leaf_image">
+                <div class="upload-icon">↑</div>
+                <h3>Drop your leaf image here</h3>
+                <p>or click to browse files</p>
+                <span class="muted">SUPPORTED: JPG · JPEG · PNG</span>
+                <input type="file" id="leaf_image" name="leaf_image" accept=".jpg,.jpeg,.png" required>
+            </label>
+
+            <button type="submit" class="primary-btn full-btn">Analyze Plant Image ↗</button>
+        </form>
+
+        {% if error %}
+            <div class="alert {% if confidence is not none and confidence < 60 %}warning-alert{% else %}error-alert{% endif %}">
+                {{ error }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="result-panel">
+        <div class="eyebrow">DIAGNOSTIC REPORT</div>
+
+        {% if prediction %}
+            <span class="result-label">DETECTED CLASS</span>
+            <h2>{{ prediction|replace('_', ' ')|replace('___', ' — ')|title }}</h2>
+
+            {% if confidence is not none %}
+
+            <div class="confidence-block">
+    <div class="confidence-heading">
+        <span>MODEL CONFIDENCE</span>
+        <strong>{{ "%.2f"|format(confidence) }}%</strong>
+    </div>
+
+    <progress
+        class="confidence-track"
+        value="{{ confidence }}"
+        max="100">
+    </progress>
+</div>
+                </div>
+            {% endif %}
+
+            {% if image_path %}
+                <img src="{{ image_path }}" alt="Uploaded plant leaf" class="uploaded-image">
+            {% endif %}
+
+            {% if symptoms %}
+                <div class="suggestion-box">
+                    <span class="result-label">OBSERVED SYMPTOMS</span>
+                    <p>{{ symptoms }}</p>
+                </div>
+            {% endif %}
+
+            {% if care %}
+                <div class="suggestion-box">
+                    <span class="result-label">CARE GUIDANCE</span>
+                    <p>{{ care }}</p>
+                </div>
+            {% endif %}
+
+            <p class="small-note">Machine learning predictions are indicative. Confirm uncertain results with a plant-health expert.</p>
+
+        {% else %}
+            <div class="result-symbol">✳</div>
+            <h2>Your plant's<br>health matters.</h2>
+            <p>Your diagnostic report will appear here after image analysis.</p>
+        {% endif %}
+        {% if prevention %}
+<div class="disease-info">
+    <h3>🛡️ Prevention Tips</h3>
+    <p>{{ prevention }}</p>
+</div>
+{% endif %}
+    </div>
+</section>
+
+{% endblock %}

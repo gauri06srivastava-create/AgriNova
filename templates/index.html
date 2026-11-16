@@ -1,83 +1,157 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>AgriNova | Smart Agriculture</title>
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}Crop Intelligence | AgriNova{% endblock %}
 
-<div class="container">
+{% block content %}
 
-    <div class="header">
-        <h1>🌱 AgriNova</h1>
-        <p>Smart Crop Recommendation System</p>
-        <p>Find the right crop for your soil.</p>
+<section class="hero">
+    <div class="hero-content">
+        <div class="eyebrow"><span class="status-dot"></span> SMART AGRICULTURE PLATFORM</div>
+
+        <h1>Grow smarter.<br><span class="accent">Harvest better.</span></h1>
+
+        <p>
+            Make informed farming decisions with intelligent crop
+            recommendations powered by machine learning.
+        </p>
+
+        <a href="#crop-form" class="primary-btn">Explore Crop Intelligence ↗</a>
     </div>
 
-    <div class="form-card">
+    <div class="hero-visual">
+        <div class="visual-glow"></div>
+        <div class="visual-card">
+            <span class="visual-label">AGRICULTURE / 01</span>
+            <div class="plant-symbol">🌱</div>
+            <h3>Nature meets intelligence.</h3>
+            <p>Data-driven decisions for sustainable farming.</p>
+            <div class="visual-bottom">
+                <span>PRECISION FARMING</span>
+                <span>✳</span>
+            </div>
+        </div>
+    </div>
+</section>
 
-        <form method="POST">
+<section class="stats-grid">
+    <div class="stat-card">
+        <span class="stat-icon">⌁</span>
+        <p>01 / MODULE</p>
+        <h3>Crop Intelligence</h3>
+        <span class="muted">ML-powered recommendations</span>
+    </div>
 
-            <div class="form-grid">
+    <div class="stat-card">
+        <span class="stat-icon">◉</span>
+        <p>02 / INPUT</p>
+        <h3>Soil Parameters</h3>
+        <span class="muted">NPK, pH & climate data</span>
+    </div>
 
-                <div class="input-group">
-                    <label>Nitrogen (N)</label>
-                    <input type="number" step="any" name="N" required>
+    <div class="stat-card">
+        <span class="stat-icon">↗</span>
+        <p>03 / OUTPUT</p>
+        <h3>Smart Insights</h3>
+        <span class="muted">Crop suitability prediction</span>
+    </div>
+</section>
+
+<section class="section" id="crop-form">
+    <div class="section-heading">
+        <div>
+            <div class="eyebrow">CROP INTELLIGENCE / 01</div>
+            <h2>Find your ideal crop.</h2>
+            <p>Enter your soil and environmental parameters to generate a recommendation.</p>
+        </div>
+        <span class="section-number">01 — 04</span>
+    </div>
+
+    <div class="workspace">
+        <form method="POST" action="{{ url_for('home') }}" class="form-panel">
+
+            <h3>Soil composition</h3>
+            <p class="muted">Enter the nutrient values available in your soil.</p>
+
+            <div class="input-grid">
+                <div class="field">
+                    <label>Nitrogen <span>(N)</span></label>
+                    <input type="number" step="any" min="0" name="N" placeholder="e.g. 90" required>
                 </div>
 
-                <div class="input-group">
-                    <label>Phosphorus (P)</label>
-                    <input type="number" step="any" name="P" required>
+                <div class="field">
+                    <label>Phosphorus <span>(P)</span></label>
+                    <input type="number" step="any" min="0" name="P" placeholder="e.g. 42" required>
                 </div>
 
-                <div class="input-group">
-                    <label>Potassium (K)</label>
-                    <input type="number" step="any" name="K" required>
+                <div class="field">
+                    <label>Potassium <span>(K)</span></label>
+                    <input type="number" step="any" min="0" name="K" placeholder="e.g. 43" required>
                 </div>
 
-                <div class="input-group">
-                    <label>Temperature (°C)</label>
-                    <input type="number" step="any" name="temperature" required>
-                </div>
-
-                <div class="input-group">
-                    <label>Humidity (%)</label>
-                    <input type="number" step="any" name="humidity" required>
-                </div>
-
-                <div class="input-group">
+                <div class="field">
                     <label>Soil pH</label>
-                    <input type="number" step="any" name="ph" required>
+                    <input type="number" step="any" min="0" max="14" name="ph" placeholder="e.g. 6.5" required>
                 </div>
-
-                <div class="input-group">
-                    <label>Rainfall (mm)</label>
-                    <input type="number" step="any" name="rainfall" required>
-                </div>
-
             </div>
 
-            <button type="submit">
-                Recommend Crop 🌾
+            <div class="form-divider"></div>
+
+            <h3>Environmental conditions</h3>
+            <p class="muted">Add the current climate measurements for your location.</p>
+
+            <div class="input-grid">
+                <div class="field">
+                    <label>Temperature <span>°C</span></label>
+                    <input type="number" step="any" name="temperature" placeholder="e.g. 25" required>
+                </div>
+
+                <div class="field">
+                    <label>Humidity <span>%</span></label>
+                    <input type="number" step="any" min="0" max="100" name="humidity" placeholder="e.g. 80" required>
+                </div>
+
+                <div class="field full-field">
+                    <label>Rainfall <span>mm</span></label>
+                    <input type="number" step="any" min="0" name="rainfall" placeholder="e.g. 200" required>
+                </div>
+            </div>
+
+            <button type="submit" class="primary-btn full-btn">
+                Generate Crop Recommendation <span>↗</span>
             </button>
-
         </form>
-{% if error %}
-<div class="result" style="background:#ffe5e5; color:#b42318;">
-    <p>{{ error }}</p>
-</div>
-{% endif %}
-        {% if prediction %}
-        <div class="result">
-            <h2>Recommended Crop 🌱</h2>
-            <h3>{{ prediction }}</h3>
+
+        <div class="result-panel">
+            <div class="eyebrow">INTELLIGENCE OUTPUT</div>
+            <div class="result-symbol">✳</div>
+
+            {% if prediction %}
+                <span class="result-label">RECOMMENDED CROP</span>
+                <h2 class="result-crop">{{ prediction|title }}</h2>
+                <p>Your soil and climate inputs have been processed by the crop recommendation model.</p>
+            {% else %}
+                <h2>Awaiting<br>your data.</h2>
+                <p>Your crop recommendation will appear here after you submit the soil and climate parameters.</p>
+            {% endif %}
+
+            {% if error %}
+                <div class="alert error-alert">{{ error }}</div>
+            {% endif %}
+
+            <div class="result-foot">
+                <span>MODEL STATUS</span>
+                <span class="accent">● READY</span>
+            </div>
         </div>
-        {% endif %}
-
     </div>
-</div>
+</section>
 
-</body>
-</html>
+<section class="feature-strip">
+    <div>
+        <div class="eyebrow">EXPLORE MORE</div>
+        <h2>Your farm, understood better.</h2>
+    </div>
+    <a href="{{ url_for('soil_analysis') }}" class="secondary-btn">Explore Soil Analysis →</a>
+</section>
+
+{% endblock %}
