@@ -32,6 +32,36 @@ The platform combines crop recommendation, soil analysis, plant disease detectio
 - Provides farming information for Rice, Wheat, Maize, Tomato, and Potato.
 - Includes soil, irrigation, fertilizer, seasonal, and cultivation tips.
 
+## 🏗️ System Architecture
+
+```mermaid
+flowchart TD
+    A["User"] --> B["AgriNova Web Interface"]
+    B --> C["Flask Backend"]
+
+    C --> D["Crop Recommendation"]
+    C --> E["Soil Analysis"]
+    C --> F["Plant Disease Detection"]
+    C --> G["Weather Information"]
+    C --> H["Farming Knowledge Hub"]
+
+    D --> I["Crop ML Model"]
+    E --> J["Soil Analysis Logic"]
+    F --> K["MobileNetV2 Model"]
+    F --> L["Disease Information"]
+    G --> M["Weather API"]
+    H --> N["Crop Knowledge Database"]
+
+    I --> O["Results"]
+    J --> O
+    K --> O
+    L --> O
+    M --> O
+    N --> O
+
+    O --> B
+    B --> P["User Views Results"]
+```
 ## 🛠️ Tech Stack
 
 | Category | Technologies |
