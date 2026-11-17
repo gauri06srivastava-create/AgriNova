@@ -1872,3 +1872,100 @@ body.app-shell {
 .crop-leaf {
     background: rgba(126, 170, 105, 0.15);
 }
+
+/* =====================================
+   AGRINOVA - SOIL ANALYSIS UI POLISH
+===================================== */
+
+.soil-container,
+.soil-analysis,
+.soil-section {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.soil-container h1,
+.soil-analysis h1,
+.soil-section h1 {
+    letter-spacing: -1px;
+}
+
+.soil-container input,
+.soil-container select,
+.soil-analysis input,
+.soil-analysis select,
+.soil-section input,
+.soil-section select {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid rgba(75, 130, 90, 0.25);
+    border-radius: 12px;
+    background: #f8fbf7;
+    color: #183c2b;
+    transition: all 0.25s ease;
+}
+
+.soil-container input:focus,
+.soil-analysis input:focus,
+.soil-section input:focus {
+    outline: none;
+    border-color: #4d9563;
+    box-shadow: 0 0 0 4px rgba(77, 149, 99, 0.13);
+}
+
+.soil-container label,
+.soil-analysis label,
+.soil-section label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #244b35;
+}
+
+.soil-container button,
+.soil-analysis button,
+.soil-section button {
+    border-radius: 12px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.soil-container button:hover,
+.soil-analysis button:hover,
+.soil-section button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(35, 90, 52, 0.16);
+}
+
+/* Result cards */
+.soil-container .card,
+.soil-analysis .card,
+.soil-section .card,
+.soil-result,
+.soil-result-card {
+    border-radius: 18px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.soil-container .card:hover,
+.soil-analysis .card:hover,
+.soil-section .card:hover,
+.soil-result-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(25, 70, 40, 0.10);
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    .soil-container,
+    .soil-analysis,
+    .soil-section {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .soil-container input,
+    .soil-analysis input,
+    .soil-section input {
+        font-size: 16px;
+    }
+}

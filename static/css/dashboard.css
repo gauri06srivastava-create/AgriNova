@@ -625,3 +625,222 @@ footer span {
         font-size: 21px;
     }
 }
+
+/* ==========================================
+   AGRINOVA - HOMEPAGE FINAL POLISH
+   ========================================== */
+
+:root {
+    --agri-deep: #102f23;
+    --agri-green: #276749;
+    --agri-light: #e7f2e8;
+    --agri-accent: #a5d6a7;
+    --agri-white: #f8fbf7;
+}
+
+/* Smooth interactions */
+.hero,
+.stat-card,
+.form-panel,
+.result-panel,
+.feature-strip {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hero section */
+.hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero h1 {
+    letter-spacing: -1.8px;
+    line-height: 1.08;
+}
+
+.hero .accent {
+    color: var(--agri-accent);
+}
+
+.hero-visual {
+    position: relative;
+}
+
+.visual-card {
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.visual-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 22px 45px rgba(0, 0, 0, 0.16);
+}
+
+.plant-symbol {
+    transition: transform 0.4s ease;
+}
+
+.visual-card:hover .plant-symbol {
+    transform: scale(1.12) rotate(-5deg);
+}
+
+/* Statistics cards */
+.stats-grid {
+    gap: 18px;
+}
+
+.stat-card {
+    border-radius: 18px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 30px rgba(20, 60, 35, 0.12);
+}
+
+.stat-icon {
+    display: inline-flex;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.15);
+}
+
+/* Form panel */
+.form-panel,
+.result-panel {
+    border-radius: 20px;
+}
+
+.form-panel h3 {
+    letter-spacing: -0.4px;
+}
+
+.field input {
+    width: 100%;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.field input:focus {
+    outline: none;
+    border-color: #68a878;
+    box-shadow: 0 0 0 4px rgba(104, 168, 120, 0.15);
+}
+
+.field input::placeholder {
+    opacity: 0.6;
+}
+
+.field label {
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Buttons */
+.primary-btn,
+.secondary-btn {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.primary-btn:hover,
+.secondary-btn:hover {
+    transform: translateY(-2px);
+}
+
+.primary-btn:active,
+.secondary-btn:active {
+    transform: translateY(0);
+}
+
+/* Recommendation panel */
+.result-panel {
+    position: relative;
+    overflow: hidden;
+}
+
+.result-symbol {
+    transition: transform 0.4s ease;
+}
+
+.result-panel:hover .result-symbol {
+    transform: rotate(45deg);
+}
+
+.result-crop {
+    overflow-wrap: anywhere;
+}
+
+/* Feature strip */
+.feature-strip {
+    border-radius: 20px;
+    margin-top: 32px;
+}
+
+/* Accessible focus */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+    outline: 2px solid #80bd8b;
+    outline-offset: 3px;
+}
+
+/* Responsive layout */
+@media (max-width: 900px) {
+    .hero {
+        gap: 28px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .hero {
+        padding: 24px 18px;
+    }
+
+    .hero h1 {
+        font-size: clamp(2rem, 9vw, 3rem);
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .input-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-strip {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    .full-btn {
+        width: 100%;
+    }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
