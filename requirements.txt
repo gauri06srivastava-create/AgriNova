@@ -10,3 +10,4 @@ Pillow
 torch
 torchvision
 Werkzeug
+gunicorn
