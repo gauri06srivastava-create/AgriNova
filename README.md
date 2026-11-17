@@ -178,3 +178,20 @@ GitHub: https://github.com/gauri06srivastava-create
 ---
 
 *AgriNova – Empowering Smarter Farming Through Technology.* 🌱
+
+## 📸 Project Screenshots
+
+### Homepage
+![AgriNova Homepage](screenshots/5.png)
+
+### Soil Analysis
+![Soil Analysis](screenshots/6.png)
+
+### Weather Information
+![Weather](screenshots/7.png)
+
+### Plant Disease Detection
+![Plant Disease Detection](screenshots/8.png)
+
+### Farming Knowledge Hub
+![Knowledge Hub](screenshots/9.png)
